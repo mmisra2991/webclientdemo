@@ -19,7 +19,6 @@ public class WebclientdemoApplication {
 }
 
 @RestController
-@RequestMapping("/api")
 class UserController{
 
 	private final WebClient webClient;
@@ -31,18 +30,28 @@ class UserController{
 				.build();
 	}
 
+	@GetMapping("/public")
+	public String hello(){
+		return "Hey JPMC devs!";
+	}
+
+	@GetMapping("/private")
+	public String accessPrivate(){
+		return "I am private";
+	}
+
     @GetMapping("/user/{id}")
 	public Mono<User> getOne(@PathVariable String id){
-		AtomicReference<String> authUser = new AtomicReference<>("");
-		ReactiveSecurityContextHolder.getContext()
-				.map(securityContext -> {
-					Authentication authentication = securityContext.getAuthentication();
-					UserDetails principal = (UserDetails) authentication.getPrincipal();
-					authUser.set(principal.getUsername());
-					return principal.getUsername();
-				});
+//		AtomicReference<String> authUser = new AtomicReference<>("");
+//		ReactiveSecurityContextHolder.getContext()
+//				.map(securityContext -> {
+//					Authentication authentication = securityContext.getAuthentication();
+//					UserDetails principal = (UserDetails) authentication.getPrincipal();
+//					authUser.set(principal.getUsername());
+//					return principal.getUsername();
+//				});
 
-		IO.println(authUser.get());
+//		IO.println("AutheUser is : " + authUser.get());
 
 		return webClient
 				.get()
