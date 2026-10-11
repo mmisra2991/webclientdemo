@@ -4,11 +4,13 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.ReactiveSecurityContextHolder;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
+import java.security.Principal;
 import java.util.concurrent.atomic.AtomicReference;
 
 @SpringBootApplication
@@ -36,8 +38,18 @@ class UserController{
 	}
 
 	@GetMapping("/private")
-	public String accessPrivate(){
-		return "I am private";
+	public Mono<String> accessPrivate(){
+			return ReactiveSecurityContextHolder.getContext()
+					.map(SecurityContext::getAuthentication)
+					.doOnNext(auth -> {
+						var principal = auth.getPrincipal();
+						System.out.println("Auth object is : " + principal);
+					})
+					.doOnNext(user -> {
+						String name = user.getName();
+						System.out.println("Name is : " + name);
+					})
+					.thenReturn("I am private");
 	}
 
     @GetMapping("/user/{id}")
