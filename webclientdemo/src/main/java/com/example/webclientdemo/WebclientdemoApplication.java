@@ -54,17 +54,6 @@ class UserController{
 
     @GetMapping("/user/{id}")
 	public Mono<User> getOne(@PathVariable String id){
-//		AtomicReference<String> authUser = new AtomicReference<>("");
-//		ReactiveSecurityContextHolder.getContext()
-//				.map(securityContext -> {
-//					Authentication authentication = securityContext.getAuthentication();
-//					UserDetails principal = (UserDetails) authentication.getPrincipal();
-//					authUser.set(principal.getUsername());
-//					return principal.getUsername();
-//				});
-
-//		IO.println("AutheUser is : " + authUser.get());
-
 		return webClient
 				.get()
 				.uri("users/{id}" , id )
