@@ -30,6 +30,7 @@ public class AppSecurityConfig {
                 .addFilterAt(new RobotFilter(), SecurityWebFiltersOrder.AUTHENTICATION)
                 .httpBasic(withDefaults())
                 .formLogin(withDefaults())
+                .authenticationManager(new ReactiveAuthenticationProvider())
                 .build();
 
     }

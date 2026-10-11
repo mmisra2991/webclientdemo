@@ -16,14 +16,15 @@ public class RobotFilter implements WebFilter {
         String authHeader = exchange.getRequest().getHeaders().getFirst("x-robot-auth");
 
         if(authHeader == null){
-           return chain.filter(exchange);
+            return chain.filter(exchange);
         }
 
         if("beep-boop".equals(authHeader)){
             SecurityContextImpl securityContext = new SecurityContextImpl(new RobotAuthentication());
 
             return chain.filter(exchange)
-                    .contextWrite(ReactiveSecurityContextHolder.withSecurityContext(Mono.just(securityContext)));
+                    .contextWrite(ReactiveSecurityContextHolder
+                            .withSecurityContext(Mono.just(securityContext)));
         }
 
         exchange.getResponse().setStatusCode(HttpStatus.FORBIDDEN);
